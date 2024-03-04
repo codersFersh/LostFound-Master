@@ -136,8 +136,8 @@ const signUpForm = ref({
 
 // 登录表单模型
 const loginModel = reactive({
-  username: "",
-  password: "",
+  username: "admin",
+  password: "123",
   code: "",
 });
 
@@ -177,6 +177,7 @@ const commit = ()=>{
         store.setUserId(res.data.userId)
         store.setNickName(res.data.nickName)
         store.setSex(res.data.sex)
+        store.setToken(res.data.token)
         //跳转首页
         router.push({path:'/'})
       }

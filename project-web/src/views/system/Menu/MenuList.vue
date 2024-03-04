@@ -1,13 +1,15 @@
 <template>
-  <el-main>
+  <el-main style="padding-top: 10px;">
     <el-button type="primary" icon="Plus" size="default" @click="addBtn"
+    v-if="global.$hasPerm(['sys:menu:add'])"
       >新增</el-button
     >
     <!-- 表格 -->
     <el-table
-      style="margin-top: 20px"
+      style="margin-top: 10px"
       default-expand-all
       :data="tableList"
+      :height="TableHeight"
       row-key="menuId"
       border
       stripe
@@ -38,12 +40,13 @@
       <el-table-column label="路由地址" prop="path"></el-table-column>
       <el-table-column label="组件路径" prop="url"></el-table-column>
       <el-table-column label="序号" prop="orderNum"></el-table-column>
-      <el-table-column label="操作" align="center" width="220">
+      <el-table-column v-if="global.$hasPerm(['sys:menu:edit','sys:menu:delete'])" label="操作" align="center" width="220">
         <template #default="scope">
           <el-button
             type="primary"
             icon="Edit"
             size="default"
+            v-if="global.$hasPerm(['sys:menu:edit'])"
             @click="editBtn(scope.row)"
             >编辑</el-button
           >
@@ -51,6 +54,7 @@
             type="danger"
             icon="Delete"
             size="default"
+            v-if="global.$hasPerm(['sys:menu:delete'])"
             @click="deleteBtn(scope.row.menuId)"
             >删除</el-button
           >
@@ -164,6 +168,9 @@ const addForm = ref<FormInstance>();
 //弹框属性
 const { dialog, onClose, onShow } = useDialog();
 
+//表格高度
+const TableHeight = ref(0);
+
 //获取上级菜单数据
 const treeList = ref([]);
 const getParent = async () => {
@@ -185,6 +192,8 @@ const addBtn = () => {
   //清空表单
   addForm.value?.resetFields();
 };
+
+
 
 //表单绑定的对象
 const addModel = reactive({
@@ -332,6 +341,9 @@ const getList = async () => {
 };
 onMounted(() => {
   getList();
+  nextTick(()=>{
+    TableHeight.value = window.innerHeight - 170
+  })
 });
 </script>
 

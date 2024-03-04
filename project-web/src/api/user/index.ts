@@ -48,3 +48,14 @@ export const getAssignTreeApi = (parm:AssignParm)=>{
 export const updatePasswordApi = (parm:UpdateParm)=>{
     return http.post("/user/updatePassword",parm)
 } 
+
+//查询用户菜单
+export const getMenuListApi = (userId:string)=>{
+    return http.get("/user/getMenuList",{userId:userId})
+}
+
+//获取用户信息
+export const getInfoApi = (userId:string)=>{
+    return http.get("/user/getInfo",{userId:userId})
+}
+

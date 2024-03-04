@@ -15,5 +15,8 @@ public interface SysUserService extends IService<SysUser> {
 
     //查询菜单树
     AssignTreeVo getAssignTree(AssignTreeParm parm);
+
+    //根据用户名查用户
+    SysUser loadUser(String username);
 }
 

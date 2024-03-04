@@ -1,11 +1,14 @@
 import { defineStore } from 'pinia'
+import { getInfoApi } from '@/api/user'
 //定义store
 export const userSotre = defineStore('userSotre', {
     state: () => {
         return {
             userId:'',
             nickName:'',
-            sex:''
+            sex:'',
+            token:'',
+            codeList: []
         }
     },
     getters: {
@@ -17,6 +20,12 @@ export const userSotre = defineStore('userSotre', {
         },
         getSex(state) {
             return state.sex
+        },
+        getToken(state) {
+            return state.token
+        },
+        getCodeList(state){
+            return state.codeList
         }
     },
     actions: {
@@ -28,12 +37,27 @@ export const userSotre = defineStore('userSotre', {
         },
         setSex(sex: string) {
             this.sex = sex;
+        },
+        setToken(token: string) {
+            this.token = token;
+        },
+        getInfo() {
+            return new Promise((resolve, reject) => {
+                getInfoApi(this.userId).then((res) => {
+                    if (res && res.code == 200) {
+                        this.codeList = res.data.permissons
+                    }
+                    resolve(this.codeList)
+                }).catch((error) => {
+                    reject(error)
+                })
+            })
         }
     },
     persist: {
       enabled: true,  //开启持久化操作
       strategies: [
-        { storage: localStorage, paths: ['userId','nickName','sex'] }
+        { storage: sessionStorage, paths: ['userId','nickName','sex','token'] }
       ]
     }
 })

@@ -125,7 +125,9 @@ const commit = () => {
         //清空缓存
         sessionStorage.clear();
         //跳转去登录
-        router.push({ path: "/login" });
+        window.location.href = '/login';
+        // router.push({ path: "/login" });
+        
       }
     }
   });
@@ -139,7 +141,8 @@ const loginoutBtn = async() =>{
     //清空数据
     sessionStorage.clear()
     //跳转登录
-    router.push({path: "/login"});
+    window.location.href = '/login';
+    // router.push({path: "/login"});
   }
 }
 

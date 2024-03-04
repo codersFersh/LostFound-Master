@@ -22,3 +22,4 @@ export const editApi = (parm:MenuType)=>{
 export const deleteApi = (menuId:string)=>{
     return http.delete(`/menu/${menuId}`)
 }
+

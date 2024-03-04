@@ -7,6 +7,7 @@ import com.itmk.web.sys_menu.entity.MakeMenuTree;
 import com.itmk.web.sys_menu.entity.SysMenu;
 import com.itmk.web.sys_menu.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -21,6 +22,7 @@ public class SysMenuController {
 
     //新增
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('sys:menu:add')")
     public ResultVo add(@RequestBody SysMenu sysMenu){
         sysMenu.setCreateTime(new Date());
         if(sysMenuService.save(sysMenu)){
@@ -31,6 +33,7 @@ public class SysMenuController {
 
     //编辑
     @PutMapping("/edit")
+    @PreAuthorize("hasAuthority('sys:menu:edit')")
     public ResultVo edit(@RequestBody SysMenu sysMenu){
         sysMenu.setUpdateTime(new Date());
         if(sysMenuService.updateById(sysMenu)){
@@ -41,6 +44,7 @@ public class SysMenuController {
 
     //删除
     @DeleteMapping("/{menuId}")
+    @PreAuthorize("hasAuthority('sys:menu:delete')")
     public ResultVo delete(@PathVariable("menuId") Long menuId){
         //如果存在下级菜单，不能删除
         QueryWrapper<SysMenu> query = new QueryWrapper<>();

@@ -19,7 +19,7 @@
         <el-button icon="Close" @click="resetBtn" type="danger" plain
           >重置</el-button
         >
-        <el-button icon="Plus" type="primary" @click="addBtn">新增</el-button>
+        <el-button v-if="global.$hasPerm(['sys:user:add'])" icon="Plus" type="primary" @click="addBtn">新增</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格 -->
@@ -45,12 +45,13 @@
       </el-table-column>
       <el-table-column prop="phone" label="电话"></el-table-column>
       <el-table-column prop="email" label="邮箱"></el-table-column>
-      <el-table-column align="center" width="320" label="操作">
+      <el-table-column v-if="global.$hasPerm(['sys:user:edit','sys:user:reste','sys:user:delete'])" align="center" width="320" label="操作">
         <template #default="scope">
           <el-button
             type="primary"
             icon="Edit"
-            size="default"
+            size="default"            
+            v-if="global.$hasPerm(['sys:user:edit'])"
             @click="editBtn(scope.row)"
             >编辑</el-button
           >
@@ -58,6 +59,7 @@
             type="warning"
             icon="Setting"
             size="default"
+            v-if="global.$hasPerm(['sys:user:reste'])"
             @click="resetPasswordBtn(scope.row.userId)"
             >重置密码</el-button
           >
@@ -65,6 +67,7 @@
             type="danger"
             icon="Delete"
             size="default"
+            v-if="global.$hasPerm(['sys:user:delete'])"
             @click="deleteBtn(scope.row.userId)"
             >删除</el-button
           >
@@ -333,7 +336,7 @@ const deleteBtn = async (userId: string) => {
 };
 //重置密码
 const resetPasswordBtn = async(userId: string) => {
-  const confirm = await global.$myconfirm("确定重置密码吗,重置之后密码是【666666】?");
+  const confirm = await global.$myconfirm("确定重置密码吗,重置之后密码是【123】?");
   if (confirm) {
     let res = await resetPasswordApi({userId:userId});
     if (res && res.code == 200) {
