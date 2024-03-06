@@ -1,6 +1,7 @@
 package com.itmk.config.security;
 
 import com.itmk.config.security.detailservice.CustomerUserDetailService;
+import com.itmk.config.security.filter.CheckTokenFilter;
 import com.itmk.config.security.handler.CustomAccessDeineHandler;
 import com.itmk.config.security.handler.LoginFailureHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @Configuration: 表明SpringSecurityConfig类是一个配置类
@@ -30,6 +32,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private LoginFailureHandler loginFailureHandler;
     @Autowired
     private CustomAccessDeineHandler customAccessDeineHandler;
+    @Autowired
+    private CheckTokenFilter checkTokenFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -40,6 +44,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         //解决跨域
         http.cors().and().headers().frameOptions().disable();
+        //配置token过滤器
+        http.addFilterBefore(checkTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.csrf().disable().authorizeRequests() //除了登录和验证码请求，其他的所有请求都要进行验证
                 .antMatchers("/user/getImage", "/user/login").permitAll()
                 .anyRequest().authenticated()

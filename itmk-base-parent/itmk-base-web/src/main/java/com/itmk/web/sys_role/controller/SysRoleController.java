@@ -3,6 +3,7 @@ package com.itmk.web.sys_role.controller;
 import com.itmk.web.sys_role.entity.SelectItme;
 import com.itmk.web.sys_role_menu.RoleMenu.RoleMenuService;
 import com.itmk.web.sys_role_menu.entity.SaveMenuParm;
+import com.itmk.web.sys_user_role.service.SysUserRoleService;
 import org.apache.commons.lang.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -30,6 +31,10 @@ public class SysRoleController {
 
     @Autowired
     private RoleMenuService roleMenuService;
+
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
+
     //新增
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('sys:role:add')")
@@ -56,11 +61,13 @@ public class SysRoleController {
     @DeleteMapping("/{roleId}")
     @PreAuthorize("hasAuthority('sys:role:delete')")
     public ResultVo delete(@PathVariable("roleId") Long roleId) {
-
-        if (sysRoleService.removeById(roleId)) {
-            return ResultUtils.success("删除成功！");
+        if(sysUserRoleService.getById(roleId) != null){
+            if (sysRoleService.removeById(roleId)) {
+                return ResultUtils.success("删除成功！");
+            }
+            return ResultUtils.error("删除失败！");
         }
-        return ResultUtils.error("删除失败！");
+       return ResultUtils.error("该角色已有用户在使用不能删除");
     }
 
     //列表

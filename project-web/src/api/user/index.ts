@@ -59,3 +59,8 @@ export const getInfoApi = (userId:string)=>{
     return http.get("/user/getInfo",{userId:userId})
 }
 
+//查询用户菜单
+export const loginOutApi = ()=>{
+    return http.get("/user/loginOutApi")
+}
+

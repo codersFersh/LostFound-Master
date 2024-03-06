@@ -57,13 +57,13 @@ import SysDialog from "@/components/SysDialog.vue";
 import useDialog from "@/hooks/useDialog";
 import { ElMessage, FormInstance } from "element-plus";
 import { reactive, ref,computed } from "vue";
-import { updatePasswordApi } from "@/api/user/index";
-import { useRouter } from "vue-router";
+import { updatePasswordApi ,loginOutApi} from "@/api/user/index";
+// import { useRouter } from "vue-router";
 import { userSotre } from "@/store/user";
 import useInstance from "@/hooks/useInstance";
 const {global} = useInstance();
 const store = userSotre();
-const router = useRouter();
+// const router = useRouter();
 
 const getSex = computed(() => store.getSex);
 
@@ -121,12 +121,16 @@ const commit = () => {
       }
       let res = await updatePasswordApi(upModel);
       if (res && res.code == 200) {
-        ElMessage.success(res.msg);
-        //清空缓存
-        sessionStorage.clear();
-        //跳转去登录
-        window.location.href = '/login';
-        // router.push({ path: "/login" });
+     
+        let res1 = await loginOutApi()
+    if(res1){
+      ElMessage.success(res.msg);
+        //清空数据
+    sessionStorage.clear()
+    //跳转登录
+    window.location.href = '/login';
+    // router.push({path: "/login"});
+    }
         
       }
     }
@@ -138,11 +142,14 @@ const loginoutBtn = async() =>{
   //是否退出登录
   const confirm = await global.$myconfirm('确认退出登录吗？')
   if(confirm){
-    //清空数据
+    let res = await loginOutApi()
+    if(res){
+        //清空数据
     sessionStorage.clear()
     //跳转登录
     window.location.href = '/login';
     // router.push({path: "/login"});
+    }
   }
 }
 

@@ -25,6 +25,7 @@
     <!-- 表格 -->
     <el-table :height="tableHeight" :data="tableList" border stripe>
       <el-table-column prop="nickName" label="姓名"></el-table-column>
+      <el-table-column prop="username" label="账号"></el-table-column>
       <el-table-column prop="sex" label="性别">
         <template #default="scope">
           <el-tag

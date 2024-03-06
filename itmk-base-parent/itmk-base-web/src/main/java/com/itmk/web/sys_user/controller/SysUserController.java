@@ -22,11 +22,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -61,6 +63,8 @@ public class SysUserController {
     @PreAuthorize("hasAuthority('sys:user:add')")
     public ResultVo add(@RequestBody SysUser sysUser){
         sysUser.setCreateTime(new Date());
+        //密码加密
+        sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
         sysUserService.saveUser(sysUser);
         return ResultUtils.success("新增成功!");
     }
@@ -123,7 +127,7 @@ public class SysUserController {
     public ResultVo resetPassword(@RequestBody SysUser sysUser){
         UpdateWrapper<SysUser> query = new UpdateWrapper<>();
         query.lambda().eq(SysUser::getUserId,sysUser.getUserId())
-                .set(SysUser::getPassword,"123");
+                .set(SysUser::getPassword,passwordEncoder.encode("123"));
         if(sysUserService.update(query)){
             return ResultUtils.success("密码重置成功!");
         }
@@ -210,6 +214,7 @@ public class SysUserController {
         //生成token
         Map<String,String> map = new HashMap<>();
         map.put("userId",Long.toString(user.getUserId()));
+        map.put("username",user.getUsername());
         String token = jwtUtils.generateToken(map);
         vo.setToken(token);
         return ResultUtils.success("登录成功",vo);
@@ -227,7 +232,10 @@ public class SysUserController {
     @PostMapping("/updatePassword")
     public ResultVo updatePassword(@RequestBody UpdatePasswordParm parm){
         SysUser user = sysUserService.getById(parm.getUserId());
-        if(!parm.getOldPassword().equals(user.getPassword())){
+//        if(!parm.getOldPassword().equals(user.getPassword())){
+//            return ResultUtils.error("原密码不正确!");
+//        }
+        if(!passwordEncoder.matches(parm.getOldPassword(), user.getPassword())){
             return ResultUtils.error("原密码不正确!");
         }
         //更新条件
@@ -290,6 +298,18 @@ public class SysUserController {
         //组装菜单数据类型
         List<RouterVO> rourer = MakeMenuTree.makeRourer(menuList, 0L);
         return ResultUtils.success("查询成功", rourer);
+    }
+
+    /**
+     * 退出登录
+     */
+    @PostMapping("/loginOut")
+    public ResultVo loginOut(HttpServletRequest request, HttpServletResponse response){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null){
+            new SecurityContextLogoutHandler().logout(request,response,authentication);
+        }
+        return ResultUtils.success("退出登录成功!");
     }
 
 }
