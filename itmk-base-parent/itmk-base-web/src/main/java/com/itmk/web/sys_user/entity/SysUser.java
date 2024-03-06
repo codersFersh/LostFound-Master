@@ -22,6 +22,7 @@ public class SysUser implements UserDetails {
     private String phone;
     private String email;
     private String sex;
+    private String isUser;
     private String isAdmin;
     //不属于用户表，需要排除
     @TableField(exist = false)

@@ -84,20 +84,7 @@ public class SysRoleController {
         IPage<SysRole> list = sysRoleService.page(page, query);
         return ResultUtils.success("查询成功",list);
     }
-    //列表
-    @GetMapping("/listUser")
-    public ResultVo getListUser(RoleParm parm){
-        //构造分页对象
-        IPage<SysRole> page = new Page<>(parm.getCurrentPage(),parm.getPageSize());
-        //构造查询条件
-        QueryWrapper<SysRole> query = new QueryWrapper<>();
-        if(StringUtils.isNotEmpty(parm.getRoleName())){
-            query.lambda().like(SysRole::getRoleName,parm.getRoleName());
-        }
-        query.lambda().orderByDesc(SysRole::getCreateTime);
-        IPage<SysRole> list = sysRoleService.page(page, query);
-        return ResultUtils.success("查询成功",list);
-    }
+
 
 
     //角色下拉数据

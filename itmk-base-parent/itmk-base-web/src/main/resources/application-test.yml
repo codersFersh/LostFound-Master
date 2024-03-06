@@ -16,12 +16,12 @@ jwt:
   issuer: itmk
   #秘钥
   secret: com.itmk
-  #30分钟过期
-  expiration: 30
+  #120分钟过期
+  expiration: 120
 
 #不需要token验证的请求，逗号分隔配置
 ignore:
-  url: /user/login,/user/getImage
+  url: /admin/login,/admin/getImage,/user/add
 
 #mybatis plus配置
 mybatis-plus:

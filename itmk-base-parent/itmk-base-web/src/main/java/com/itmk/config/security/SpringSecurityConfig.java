@@ -47,7 +47,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         //配置token过滤器
         http.addFilterBefore(checkTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.csrf().disable().authorizeRequests() //除了登录和验证码请求，其他的所有请求都要进行验证
-                .antMatchers("/user/getImage", "/user/login").permitAll()
+                .antMatchers("/admin/getImage", "/admin/login","/user/add").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling()
                 .authenticationEntryPoint(loginFailureHandler)

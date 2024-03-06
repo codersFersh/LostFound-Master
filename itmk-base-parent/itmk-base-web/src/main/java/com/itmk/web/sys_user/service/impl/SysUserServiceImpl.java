@@ -53,6 +53,30 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
     }
 
+    @Transactional
+    @Override
+    public void saveUserAdd(SysUser sysUser) {
+        //插入用户信息
+        int i = this.baseMapper.insert(sysUser);
+        //设置用户的角色
+        if(i > 0){
+//            //把前端逗号分隔的字符串转为数组
+//            String[] split = sysUser.getRoleId().split(",");
+//            if(split.length > 0){
+                List<SysUserRole> roles = new ArrayList<>();
+//                for (int j = 0; j < split.length; j++) {
+                    SysUserRole userRole = new SysUserRole();
+                    userRole.setUserId(sysUser.getUserId());
+                    //固定选择为用户
+                    userRole.setRoleId(Long.parseLong("14"));
+                    roles.add(userRole);
+//                }
+                //保存到用户角色表
+                sysUserRoleService.saveBatch(roles);
+//            }
+        }
+    }
+
     @Override
     @Transactional
     public void editUser(SysUser sysUser) {
@@ -79,6 +103,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 sysUserRoleService.saveBatch(roles);
             }
         }
+    }
+    @Override
+    @Transactional
+    public void editUser1(SysUser sysUser) {
+        //编辑用户信息
+         this.baseMapper.updateById(sysUser);
     }
 
     @Override
@@ -131,5 +161,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         QueryWrapper<SysUser> query = new QueryWrapper<>();
         query.lambda().eq(SysUser::getUsername,username);
         return this.baseMapper.selectOne(query);
+    }
+
+    @Override
+    public SysUser findByUsername(String username) {
+        return baseMapper.findByUsername(username);
     }
 }

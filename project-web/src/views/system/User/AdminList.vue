@@ -19,7 +19,7 @@
         <el-button icon="Close" @click="resetBtn" type="danger" plain
           >重置</el-button
         >
-        <!-- <el-button v-if="global.$hasPerm(['sys:user:add'])" icon="Plus" type="primary" @click="addBtn">新增</el-button> -->
+        <el-button v-if="global.$hasPerm(['sys:user:add'])" icon="Plus" type="primary" @click="addBtn">新增</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格 -->
@@ -135,6 +135,16 @@
           </el-row>
           <el-row>
             <el-col :span="12" :offset="0">
+              <el-form-item prop="roleId" label="角色：">
+                <SelectChecked
+                  ref="selectRef"
+                  :options="options"
+                  :bindValue="bindValue"
+                  @selected="selected"                
+                ></SelectChecked>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12" :offset="0">
               <el-form-item prop="username" label="账户：">
                 <el-input v-model="addModel.username"></el-input>
               </el-form-item>
@@ -161,14 +171,16 @@ import { nextTick, onMounted, reactive, ref } from "vue";
 import SysDialog from "@/components/SysDialog.vue";
 import useDialog from "@/hooks/useDialog";
 import { ElMessage, FormInstance } from "element-plus";
+import SelectChecked from "@/components/SelectChecked.vue";
 import { getSelectApi } from "@/api/role/index";
 import {
   addApi,
   getListApi,
+  getRoleListApi,
   editApi,
   deleteApi,
   resetPasswordApi,
-} from "@/api/user/indexUser";
+} from "@/api/user/index";
 import { User } from "@/api/user/UserModel";
 import useInstance from "@/hooks/useInstance";
 const { global } = useInstance();
@@ -246,32 +258,45 @@ const rules = reactive({
 //查询角色下拉数据
 const getSelect = async () => {
   let res = await getSelectApi();
-  if (res && res.code == 200) {
+  if (res && res.code == 200) {   
     options.value = [];
     options.value = res.data;
   }
 };
-
+//用户拥有的角色id
+const bindValue = ref([]);
+const roleIds = ref("");
+//根据用户id查询角色
+const getRoleList = async (userId: string) => {
+  let res = await getRoleListApi(userId);
+  if (res && res.code == 200) {
+    bindValue.value = res.data;
+    console.log(res.data);
+    roleIds.value = res.data.join(",");
+    console.log(roleIds.value);
+  }
+};
 const tags = ref("");
 //新增按钮
-// const addBtn = () => {
-//   tags.value = "0";
-//   dialog.title = "新增";
-//   dialog.height = 230;
-//   //显示弹框
-//   onShow();
-//   //清空下拉数据
-//   options.value = [];
-//   //获取下拉数据
-//   getSelect();
+const addBtn = () => {
+  tags.value = "0";
+  dialog.title = "新增";
+  dialog.height = 230;
+  //显示弹框
+  onShow();
+  //清空下拉数据
+  options.value = [];
+  bindValue.value = [];
+  //获取下拉数据
+  getSelect();
 
-//   nextTick(() => {
-//     //清空下拉数据
-//     selectRef.value.clear();
-//   });
-//   //清空表单
-//   addForm.value?.resetFields();
-// };
+  nextTick(() => {
+    //清空下拉数据
+    selectRef.value.clear();
+  });
+  //清空表单
+  addForm.value?.resetFields();
+};
 
 //编辑
 const editBtn = async (row: User) => {
@@ -280,15 +305,18 @@ const editBtn = async (row: User) => {
   dialog.height = 230;
   //清空下拉数据
   options.value = [];
+  bindValue.value = [];
   //获取下拉数据
   await getSelect();
   //查询角色Id
+  await getRoleList(row.userId);
   //显示弹框
   onShow();
   nextTick(() => {
     //数据回显
     Object.assign(addModel, row);
     //设置角色的id
+    addModel.roleId = roleIds.value;
     addModel.password = "";
   });
 
@@ -317,6 +345,12 @@ const resetPasswordBtn = async(userId: string) => {
       getList();
     }
   }
+};
+//勾选的值
+const selected = (value: Array<string | number>) => {
+  console.log(value);
+  addModel.roleId = value.join(",");
+  console.log(addModel);
 };
 //提交表单
 const commit = () => {

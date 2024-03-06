@@ -36,9 +36,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@RequestMapping("/user")
+@RequestMapping("/admin")
 @RestController
-public class SysUserController {
+public class SysAdminController {
     @Autowired
     private SysUserService sysUserService;
 
@@ -60,27 +60,43 @@ public class SysUserController {
 
     //新增
     @PostMapping("/add")
-    @PreAuthorize("hasAuthority('sys:user:add')")
+    @PreAuthorize("hasAuthority('sys:admin:add')")
     public ResultVo add(@RequestBody SysUser sysUser){
         sysUser.setCreateTime(new Date());
-        //密码加密
-        sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
-        sysUserService.saveUser(sysUser);
-        return ResultUtils.success("新增成功!");
+        // 检查是否存在同名账号
+        SysUser existingUser = sysUserService.findByUsername(sysUser.getUsername());
+        if(existingUser == null){
+            sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
+            sysUser.setIsUser("0");
+            sysUserService.saveUser(sysUser);
+            return ResultUtils.success("新增成功!");
+        }
+        return ResultUtils.error("新增失败，同名账号已注册!");
     }
+
 
     //编辑
     @PutMapping("/edit")
-    @PreAuthorize("hasAuthority('sys:user:edit')")
+    @PreAuthorize("hasAuthority('sys:admin:edit')")
     public ResultVo edit(@RequestBody SysUser sysUser){
-        sysUser.setUpdateTime(new Date());
-        sysUserService.editUser(sysUser);
-        return ResultUtils.success("编辑成功!");
+//        sysUser.setUpdateTime(new Date());
+//        sysUserService.editUser(sysUser);
+//        return ResultUtils.success("编辑成功!");
+
+        sysUser.setCreateTime(new Date());
+        // 检查是否存在同名账号
+        SysUser existingUser = sysUserService.findByUsername(sysUser.getUsername());
+        if(existingUser == null){
+            sysUserService.editUser(sysUser);
+            return ResultUtils.success("编辑成功!");
+        }
+        return ResultUtils.error("编辑失败，已存在同名账号!");
+
     }
 
     //删除
     @DeleteMapping("/{userId}")
-    @PreAuthorize("hasAuthority('sys:user:delete')")
+    @PreAuthorize("hasAuthority('sys:admin:delete')")
     public ResultVo delete(@PathVariable("userId") Long userId){
         sysUserService.deleteUser(userId);
         return ResultUtils.success("删除成功!");
@@ -99,6 +115,7 @@ public class SysUserController {
         if(StringUtils.isNotEmpty(parm.getPhone())){
             query.lambda().like(SysUser::getPhone,parm.getPhone());
         }
+        query.lambda().like(SysUser::getIsUser,"0");
         query.lambda().orderByDesc(SysUser::getCreateTime);
         //查询列表
         IPage<SysUser> list = sysUserService.page(page, query);
@@ -141,7 +158,7 @@ public class SysUserController {
 
     //重置密码
     @PostMapping("/resetPassword")
-    @PreAuthorize("hasAuthority('sys:user:reset')")
+    @PreAuthorize("hasAuthority('sys:admin:reset')")
     public ResultVo resetPassword(@RequestBody SysUser sysUser){
         UpdateWrapper<SysUser> query = new UpdateWrapper<>();
         query.lambda().eq(SysUser::getUserId,sysUser.getUserId())
