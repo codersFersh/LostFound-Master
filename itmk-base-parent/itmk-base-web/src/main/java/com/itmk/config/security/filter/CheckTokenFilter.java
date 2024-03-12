@@ -46,6 +46,12 @@ public class CheckTokenFilter extends OncePerRequestFilter {
         try{
             //获取请求的url
             String uri = request.getRequestURI();
+
+            if (uri.startsWith("/img/")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             //请求不在配置的白名单，验证token
             if(!ignoreUrl.contains(uri)){
                 //token验证

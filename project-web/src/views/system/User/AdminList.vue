@@ -106,7 +106,7 @@
           :inline="false"
           size="default"
         >
-          <el-row>
+          <el-row gutter="20">
             <el-col :span="12" :offset="0">
               <el-form-item prop="nickName" label="姓名：">
                 <el-input v-model="addModel.nickName"></el-input>
