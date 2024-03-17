@@ -1,7 +1,7 @@
-package com.itmk.system.sys_sld.mapper;
+package com.itmk.web.sys_sld.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.itmk.system.sys_sld.entity.SysSld;
+import com.itmk.web.sys_sld.entity.SysSld;
 
 public interface SysSldMapper extends BaseMapper<SysSld> {
 

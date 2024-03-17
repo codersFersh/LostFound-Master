@@ -46,7 +46,7 @@
       </el-table-column>
       <el-table-column prop="phone" label="电话"></el-table-column>
       <el-table-column prop="email" label="邮箱"></el-table-column>
-      <el-table-column v-if="global.$hasPerm(['sys:user:edit','sys:user:reste','sys:user:delete'])" align="center" width="320" label="操作">
+      <el-table-column v-if="global.$hasPerm(['sys:user:edit','sys:user:reset','sys:user:delete'])" align="center" width="320" label="操作">
         <template #default="scope">
           <el-button
             type="primary"
@@ -60,7 +60,7 @@
             type="warning"
             icon="Setting"
             size="default"
-            v-if="global.$hasPerm(['sys:user:reste'])"
+            v-if="global.$hasPerm(['sys:user:reset'])"
             @click="resetPasswordBtn(scope.row.userId)"
             >重置密码</el-button
           >

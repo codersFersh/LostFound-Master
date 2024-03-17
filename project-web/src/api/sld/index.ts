@@ -13,10 +13,15 @@ export const SldList = (parm:SldListParm)=>{
 
 //编辑
 export const SldEdit = (parm:Sld)=>{
-  return http.put("/sld/edit",parm)
+  return http.post("/sld/edit",parm)
 }
 
 //删除
-export const SldDel = (userId:string)=>{
-  return http.delete(`/sld/${userId}`)
+export const SldDel = (sldId:string)=>{
+  return http.delete(`/sld/${sldId}`)
+}
+
+//获取启用列表
+export const listFiring = (parm:SldListParm)=>{
+  return http.get("/sld/listFiring",parm)
 }

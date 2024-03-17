@@ -1,7 +1,9 @@
 <template>
   <el-dialog :model-value="props.visible" :title="props.title" :width="props.width + 'px'" :before-close="onClose"
-    append-to-body style="padding: 0 !important;">
-    <div style="{height: props.height + 'px'}">
+    append-to-body style="padding: 0 !important;" :close-on-click-modal="false"
+      :close-on-press-escape="false"
+>
+<div :style="{ height: props.height + 'px' }">
       <slot name="content"></slot>
     </div>
     <template #footer>
@@ -43,6 +45,7 @@ const emit = defineEmits(["onClose", "onConfirm"])
 //关闭弹窗
 const onClose = () => {
   emit('onClose')
+  
 }
 
 //确认弹窗

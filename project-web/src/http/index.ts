@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { ElMessage } from 'element-plus';
 import { userSotre } from "@/store/user";
+
 //axios请求配置
 const config = {
     baseURL: 'http://localhost:8089',

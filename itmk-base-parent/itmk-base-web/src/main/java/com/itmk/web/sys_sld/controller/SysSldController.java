@@ -1,13 +1,13 @@
-package com.itmk.system.sys_sld.controller;
+package com.itmk.web.sys_sld.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itmk.utils.ResultUtils;
 import com.itmk.utils.ResultVo;
-import com.itmk.system.sys_sld.entity.SldParm;
-import com.itmk.system.sys_sld.entity.SysSld;
-import com.itmk.system.sys_sld.service.SysSldService;
+import com.itmk.web.sys_sld.entity.SldParm;
+import com.itmk.web.sys_sld.entity.SysSld;
+import com.itmk.web.sys_sld.service.SysSldService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.itmk.system.sys_sld.entity;
+package com.itmk.web.sys_sld.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

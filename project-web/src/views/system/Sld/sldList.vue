@@ -13,12 +13,12 @@
       </el-form-item>
     </el-form>
     <!-- 表格 -->
-    <el-table :data="tableList">
+    <el-table :data="tableList" :height="TableHeight">
       <el-table-column prop="sldName" label="轮播图名称"></el-table-column>
       <el-table-column prop="sldType" label="存储路径"></el-table-column>
-      <el-table-column  label="图片">
-        <template #default="{row}">
-          <el-image  :src="row.sldImg" style="width: 100px; height: 100px;"/>
+      <el-table-column label="图片">
+        <template #default="{ row }">
+          <el-image :src="row.sldImg" style="width: 100px; height: 100px;" />
         </template>
       </el-table-column>
       <el-table-column prop="isEnable" label="是否启用">
@@ -29,6 +29,12 @@
           <el-tag v-if="scope.row.isEnable == '1'" type="primary" size="default" effect="dark">
             已启用
           </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="320" align="center">
+        <template #default="scope">
+          <el-button type="primary" icon="Edit" size="default" @click="editBtn(scope.row)">编辑</el-button>
+          <el-button type="danger" icon="Delete" size="default" @click="deleteBtn(scope.row.sldId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -59,18 +65,19 @@
           <el-row>
             <el-col span="12" :offset="0">
               <el-form-item label="图片" prop="sldImg">
-                <!-- <el-upload class="upload-demo" action="http://localhost:8089/upload/img" :show-file-list="true"
-                  :on-success="handleSuccess" :before-upload="beforeUpload" limit="1">
-                  <el-button size="small" type="primary">点击上传图片</el-button>
-                </el-upload> -->
-
-                <el-upload class="avatar-uploader" :show-file-list="true" :on-success="handleSuccess"
-                  :before-upload="beforeUpload" :limit="1" list-type="picture-card">
-                  <img v-if="addModel.sldImg" :src="addModel.sldImg" class="avatar" style="width: 58px; height: 58px;" />
+                <el-upload class="avatar-uploader" :show-file-list="false" :on-success="handleSuccess"
+                  :before-upload="beforeUpload" :limit="1" list-type="picture-card" :disabled="addModel.sldImg !== ''">
+                  <img v-if="addModel.sldImg" :src="addModel.sldImg" class="avatar"
+                    style="width: 146px; height: 146px; border-radius: 5px;" />
                   <el-icon v-else class="avatar-uploader-icon">
                     <Plus />
-                  </el-icon>
+                  </el-icon>                
                 </el-upload>
+                <div style="padding-left: 100px;">
+                  <!-- 当禁用状态下显示删除按钮 -->
+                 <el-button v-if="addModel.sldImg" type="danger" icon="Delete"
+                    @click="deleteUploadedImg">删除图片</el-button>                  
+                </div>                 
               </el-form-item>
             </el-col>
 
@@ -91,14 +98,20 @@
 </template>
 
 <script setup lang="ts">
-import { SldList, SldAdd } from '@/api/sld';
-import { uploadImg } from '@/api/upload';
+import { SldList, SldAdd, SldEdit, SldDel } from '@/api/sld';
+import { uploadImg,deleteImg } from '@/api/upload';
 import type { UploadProps } from 'element-plus'
 import SysDialog from '@/components/SysDialog.vue';
 import useDialog from "@/hooks/useDialog";
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, onMounted, nextTick } from 'vue';
 import { ElMessage, FormInstance } from "element-plus";
+import { Sld } from '@/api/sld/SldModel';
+import useInstance from '@/hooks/useInstance'
 
+const TableHeight = ref(0);
+
+//获取全局golbal
+const { global } = useInstance()
 
 //弹框属性
 const { dialog, onClose, onShow } = useDialog();
@@ -121,18 +134,6 @@ const getList = async () => {
   let res = await SldList(searchParm);
   if (res && res.code == 200) {
     tableList.value = res.data.records;
-    // tableList.value.forEach((item: any) => {
-    //   item.sldImg=new URL('../../../assets/img/'+item.sldImg, import.meta.url).href
-    //   console.log(item.sldImg);
-      
-    // })
-    // console.log(tableList.value);
-
-    // tableList.value = res.data.records.map(item => ({
-    //   ...item,
-    //   sldImg: item.sldImg ? `http://localhost:8089/img/${item.sldImg}` : ''
-    // }));
-    
     searchParm.total = res.data.total;
   }
 }
@@ -167,7 +168,7 @@ const addModel = reactive({
   sldName: "",
   sldType: "",
   isEnable: "",
-  sldImg:"",
+  sldImg: "",
 })
 
 //表单验证规则
@@ -193,11 +194,21 @@ const rules = reactive({
       message: "请上传图片",
     },
   ],
+  isEnable: [
+    {
+      required: true,
+      trigger: ["blur", "change"],
+      message: "请选择状态",
+    },
+  ],
 });
+
+//判断新增还是编辑的标识 0:新增 1：编辑
+const tags = ref("");
 
 //新增按钮
 const addBtn = () => {
-  // tags.value = "0";
+  tags.value = "0";
   dialog.title = "新增";
   dialog.height = 400;
   //显示弹窗
@@ -206,12 +217,33 @@ const addBtn = () => {
   addForm.value?.resetFields();
 }
 
+//编辑按钮
+const editBtn = (row: Sld) => {
+  tags.value = "1";
+  console.log(row);
+  //显示弹框
+  dialog.visible = true;
+  dialog.title = "编辑";
+  dialog.height = 400;
+  nextTick(() => {
+    //回显数据
+    Object.assign(addModel, row);
+  });
+  //清空表单
+  addForm.value?.resetFields();
+};
+
 //提交表单
 const commit = () => {
   // 验证表单
   addForm.value?.validate(async (valid) => {
     if (valid) {
-      let res = await SldAdd(addModel);
+      let res = null;
+      if (tags.value == "0") {
+        res = await SldAdd(addModel);
+      } else {
+        res = await SldEdit(addModel);
+      }
       if (res && res.code == 200) {
         ElMessage.success(res.msg);
         getList();
@@ -221,16 +253,20 @@ const commit = () => {
   })
 }
 
-// const baseUrl = '/img/';
 
-// const getImage = (imageName) => {
-//   return baseUrl + imageName;
-   
-// };
-
-// console.log(getImage());
-
-
+//删除按钮
+const deleteBtn = async (sldId: string) => {
+  const confirm = await global.$myconfirm('确定删除该数据吗？')
+  console.log(confirm)
+  if (confirm) {
+    let res = await SldDel(sldId)
+    if (res && res.code == 200) {
+      ElMessage.success(res.msg)
+      //刷新列表
+      getList()
+    }
+  }
+};
 
 
 // 处理图片上传成功的回调
@@ -267,6 +303,7 @@ const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
     addModel.sldImg = res.data;
     // 返回 false，表示继续上传
     ElMessage.success(res.msg);
+    return false;
   } else {
     // 上传失败，弹出错误提示
     ElMessage.error(res ? res.msg : '上传失败，请重试');
@@ -276,18 +313,35 @@ const beforeUpload: UploadProps['beforeUpload'] = async (file) => {
 }
 
 // 获取文件后缀名的函数
-const getFileExtension = (filename:any) => {
+const getFileExtension = (filename: any) => {
   return filename.split('.').pop().toLowerCase(); // 转换为小写字母以便比较
 }
 
+ // 删除已上传的图片操作
+const deleteUploadedImg = async() => { 
+  const confirm = await global.$myconfirm('确定删除该数据吗？')
+  if (confirm) {
+    let filename = addModel.sldImg.substring('http://localhost:8089/img/'.length) // 完全去除"http://localhost:8089/img/"部分
+    let res = await deleteImg(filename)
+    if (res && res.code == 200) {
+      addModel.sldImg ='';
+      ElMessage.success(res.msg);
+    }
+  }
+};
+
+
+
 onMounted(() => {
   getList();
+  nextTick(()=>{
+    TableHeight.value = window.innerHeight - 240
+  })
 })
 
 </script>
 
 <style scoped>
-
 .avatar-uploader .el-upload {
   border: 1px dashed var(--el-border-color);
   border-radius: 6px;
@@ -296,11 +350,11 @@ onMounted(() => {
   overflow: hidden;
   transition: var(--el-transition-duration-fast);
 }
- 
+
 .avatar-uploader .el-upload:hover {
   border-color: var(--el-color-primary);
 }
- 
+
 .el-icon.avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -308,5 +362,4 @@ onMounted(() => {
   height: 178px;
   text-align: center;
 }
-
 </style>

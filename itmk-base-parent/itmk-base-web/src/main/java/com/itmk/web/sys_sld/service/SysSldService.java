@@ -1,7 +1,7 @@
-package com.itmk.system.sys_sld.service;
+package com.itmk.web.sys_sld.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.itmk.system.sys_sld.entity.SysSld;
+import com.itmk.web.sys_sld.entity.SysSld;
 
 public interface SysSldService extends IService<SysSld> {
 }

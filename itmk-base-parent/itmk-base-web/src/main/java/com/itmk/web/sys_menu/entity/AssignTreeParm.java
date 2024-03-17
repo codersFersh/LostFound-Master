@@ -1,4 +1,4 @@
-package com.itmk.system.sys_menu.entity;
+package com.itmk.web.sys_menu.entity;
 
 import lombok.Data;
 

@@ -1,11 +1,11 @@
-package com.itmk.system.sys_menu.controller;
+package com.itmk.web.sys_menu.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.itmk.utils.ResultUtils;
 import com.itmk.utils.ResultVo;
-import com.itmk.system.sys_menu.entity.MakeMenuTree;
-import com.itmk.system.sys_menu.entity.SysMenu;
-import com.itmk.system.sys_menu.service.SysMenuService;
+import com.itmk.web.sys_menu.entity.MakeMenuTree;
+import com.itmk.web.sys_menu.entity.SysMenu;
+import com.itmk.web.sys_menu.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

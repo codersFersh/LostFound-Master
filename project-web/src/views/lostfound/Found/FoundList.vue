@@ -1,6 +1,6 @@
 <template>
   <div>
-      分类列表
+    招领中心
   </div>
 </template>
 

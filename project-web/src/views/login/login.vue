@@ -225,7 +225,9 @@ const addModel = reactive({
   email: "",
   sex: "",
   nickName: "",
-  confirm: ""
+  confirm: "",
+  userId: "",
+  roleId:"",
 });
 
 // 是否激活右侧面板的状态

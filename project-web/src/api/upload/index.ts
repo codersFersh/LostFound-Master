@@ -6,3 +6,8 @@ import http from "@/http";
     formData.append('file',file)
     return http.post("/upload/img",formData)
   }
+
+  //删除
+export const deleteImg = (filename:string)=>{
+  return http.delete(`/upload/del/${filename}`)
+}

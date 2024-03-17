@@ -7,7 +7,6 @@
     <!-- 表格 -->
     <el-table
       style="margin-top: 10px"
-      default-expand-all
       :data="tableList"
       :height="TableHeight"
       row-key="menuId"
@@ -138,7 +137,7 @@
             </el-col>
             <el-col v-if="addModel.type == '1'" :span="12" :offset="0">
               <el-form-item label="组件路径" prop="url">
-                <el-input v-model="addModel.url"></el-input>
+                <el-input v-model="addModel.url" :autosize="{ minRows: 2, maxRows: 4 }"  type="textarea"></el-input>
               </el-form-item>
             </el-col>
           </el-row>

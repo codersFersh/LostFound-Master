@@ -1,10 +1,9 @@
 package com.itmk.web.sys_lf.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
-import java.util.Date;
-
-public class LostParm {
+@Data
+public class LostFoundParm {
     //当前第几页
     private Long currentPage;
     //没有查询的条数
