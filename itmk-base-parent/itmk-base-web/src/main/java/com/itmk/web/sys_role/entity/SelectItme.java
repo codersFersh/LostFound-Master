@@ -1,4 +1,4 @@
-package com.itmk.web.sys_role.entity;
+package com.itmk.system.sys_role.entity;
 
 import lombok.Data;
 

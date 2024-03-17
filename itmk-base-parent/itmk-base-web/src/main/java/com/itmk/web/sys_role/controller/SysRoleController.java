@@ -1,18 +1,18 @@
-package com.itmk.web.sys_role.controller;
+package com.itmk.system.sys_role.controller;
 
-import com.itmk.web.sys_role.entity.SelectItme;
-import com.itmk.web.sys_role_menu.RoleMenu.RoleMenuService;
-import com.itmk.web.sys_role_menu.entity.SaveMenuParm;
-import com.itmk.web.sys_user_role.service.SysUserRoleService;
+import com.itmk.system.sys_role.entity.SelectItme;
+import com.itmk.system.sys_role_menu.RoleMenu.RoleMenuService;
+import com.itmk.system.sys_role_menu.entity.SaveMenuParm;
+import com.itmk.system.sys_user_role.service.SysUserRoleService;
 import org.apache.commons.lang.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itmk.utils.ResultUtils;
 import com.itmk.utils.ResultVo;
-import com.itmk.web.sys_role.entity.RoleParm;
-import com.itmk.web.sys_role.entity.SysRole;
-import com.itmk.web.sys_role.service.SysRoleService;
+import com.itmk.system.sys_role.entity.RoleParm;
+import com.itmk.system.sys_role.entity.SysRole;
+import com.itmk.system.sys_role.service.SysRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

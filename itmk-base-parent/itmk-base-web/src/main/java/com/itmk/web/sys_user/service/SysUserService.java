@@ -1,9 +1,9 @@
-package com.itmk.web.sys_user.service;
+package com.itmk.system.sys_user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.itmk.web.sys_menu.entity.AssignTreeParm;
-import com.itmk.web.sys_menu.entity.AssignTreeVo;
-import com.itmk.web.sys_user.entity.SysUser;
+import com.itmk.system.sys_menu.entity.AssignTreeParm;
+import com.itmk.system.sys_menu.entity.AssignTreeVo;
+import com.itmk.system.sys_user.entity.SysUser;
 
 public interface SysUserService extends IService<SysUser> {
     //新增

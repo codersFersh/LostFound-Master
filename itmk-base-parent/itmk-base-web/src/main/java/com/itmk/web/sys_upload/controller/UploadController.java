@@ -1,4 +1,4 @@
-package com.itmk.web.sys_upload.controller;
+package com.itmk.system.sys_upload.controller;
 
 import com.itmk.utils.ResultUtils;
 import com.itmk.utils.ResultVo;
@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -29,7 +28,7 @@ public class UploadController {
         String originalFilename = file.getOriginalFilename();
         String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
         // 使用UUID和时间戳给图片重新命名,防止图片覆盖替换
-        String fileName = UUID.randomUUID().toString() + System.currentTimeMillis() + suffix;
+        String fileName = UUID.randomUUID().toString().substring(0, 2) + System.currentTimeMillis() + suffix;
 
         // 创建目录
         File dir = new File(basePath);
@@ -52,25 +51,24 @@ public class UploadController {
         }
     }
 
-    @PutMapping("/img/{filename}")
-    public ResultVo updateImage(@PathVariable String filename, @RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return ResultUtils.error("无法获取该图片");
-        }
-
+    @DeleteMapping ("/del/{filename}")
+    public ResultVo updateImage(@PathVariable String filename) {
         // 删除原有图片
         File oldFile = new File(basePath + File.separator + filename);
-        if (oldFile.exists() && !oldFile.delete()) {
+        System.out.println(oldFile);
+        // 如果文件不存在，返回相应的错误消息
+        if (!oldFile.exists()) {
+            return ResultUtils.error("图片不存在");
+        }
+
+        // 尝试删除文件
+        if (oldFile.delete()) {
+            // 如果删除成功，返回成功消息
+            return ResultUtils.success("图片已删除");
+        } else {
+            // 如果删除失败，返回相应的错误消息
             return ResultUtils.error("无法删除原有图片");
         }
 
-        // 保存新图片
-        try {
-            file.transferTo(new File(basePath + File.separator + filename));
-            return ResultUtils.success("图片已更新", filename);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResultUtils.error("更新失败");
-        }
     }
 }

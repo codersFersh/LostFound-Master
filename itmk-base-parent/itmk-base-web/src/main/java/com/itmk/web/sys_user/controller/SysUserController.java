@@ -1,40 +1,20 @@
-package com.itmk.web.sys_user.controller;
+package com.itmk.system.sys_user.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.code.kaptcha.impl.DefaultKaptcha;
-import com.itmk.jwt.JwtUtils;
 import com.itmk.utils.ResultUtils;
 import com.itmk.utils.ResultVo;
-import com.itmk.web.sys_menu.entity.*;
-import com.itmk.web.sys_menu.service.SysMenuService;
-import com.itmk.web.sys_user.entity.*;
-import com.itmk.web.sys_user.service.SysUserService;
-import com.itmk.web.sys_user_role.entity.SysUserRole;
-import com.itmk.web.sys_user_role.service.SysUserRoleService;
+import com.itmk.system.sys_user.entity.*;
+import com.itmk.system.sys_user.service.SysUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
-import sun.misc.BASE64Encoder;
 
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RequestMapping("/user")
 @RestController

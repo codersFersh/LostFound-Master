@@ -1,4 +1,4 @@
-package com.itmk.web.sys_role_menu.entity;
+package com.itmk.system.sys_role_menu.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

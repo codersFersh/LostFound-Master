@@ -1,7 +1,7 @@
-package com.itmk.web.sys_menu.mapper;
+package com.itmk.system.sys_menu.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.itmk.web.sys_menu.entity.SysMenu;
+import com.itmk.system.sys_menu.entity.SysMenu;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

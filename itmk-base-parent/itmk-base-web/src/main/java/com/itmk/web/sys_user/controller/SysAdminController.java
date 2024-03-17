@@ -1,4 +1,4 @@
-package com.itmk.web.sys_user.controller;
+package com.itmk.system.sys_user.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -8,12 +8,12 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.itmk.jwt.JwtUtils;
 import com.itmk.utils.ResultUtils;
 import com.itmk.utils.ResultVo;
-import com.itmk.web.sys_menu.entity.*;
-import com.itmk.web.sys_menu.service.SysMenuService;
-import com.itmk.web.sys_user.entity.*;
-import com.itmk.web.sys_user.service.SysUserService;
-import com.itmk.web.sys_user_role.entity.SysUserRole;
-import com.itmk.web.sys_user_role.service.SysUserRoleService;
+import com.itmk.system.sys_menu.entity.*;
+import com.itmk.system.sys_menu.service.SysMenuService;
+import com.itmk.system.sys_user.entity.*;
+import com.itmk.system.sys_user.service.SysUserService;
+import com.itmk.system.sys_user_role.entity.SysUserRole;
+import com.itmk.system.sys_user_role.service.SysUserRoleService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

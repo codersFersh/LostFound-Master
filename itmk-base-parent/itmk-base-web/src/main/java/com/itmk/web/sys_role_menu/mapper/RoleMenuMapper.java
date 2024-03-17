@@ -1,7 +1,7 @@
-package com.itmk.web.sys_role_menu.mapper;
+package com.itmk.system.sys_role_menu.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.itmk.web.sys_role_menu.entity.RoleMenu;
+import com.itmk.system.sys_role_menu.entity.RoleMenu;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
