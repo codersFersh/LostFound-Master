@@ -1,6 +1,9 @@
 package com.itmk.web.sys_lf.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+
+import java.util.Date;
 
 @Data
 public class LostFoundParm {
@@ -11,4 +14,5 @@ public class LostFoundParm {
 
     private String lfName;
     private String lfType;
+
 }

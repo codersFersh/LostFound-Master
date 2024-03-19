@@ -40,8 +40,8 @@
           </el-form-item>
         </el-col>     
         <el-col :span="10" :offset="0">
-          <el-form-item prop="Est" label="遗失时间：">
-            <el-date-picker v-model="addModel.Est"type="date"/>
+          <el-form-item prop="lfTime" label="遗失时间：">
+            <el-date-picker v-model="addModel.lfTime"type="date"/>
           </el-form-item>
         </el-col>  
       </el-row>   
@@ -120,7 +120,7 @@ const addModel = reactive({
   isPass: "",
   ispassCause: "",
   isLost: "",
-  Est: "",
+  lfTime: "",
 });
 
 //表单ref属性
@@ -177,7 +177,7 @@ const rules = reactive({
       message: "请输入您的联系方式",
     },
   ],
-  Eat: [
+  lfTime: [
     {
       required: true,
       trigger: ["blur", "change"],
@@ -207,6 +207,7 @@ const commit = () => {
         ElMessage.success(res.msg);
         resetLoginForm()
         addModel.lfImg ='';
+        ilkData.value = "";
       }
     }
   });
@@ -214,6 +215,7 @@ const commit = () => {
 
 const resetLoginForm = () => {
   addForm.value?.$el.reset();
+  ilkData.value = ""
 };
 
 

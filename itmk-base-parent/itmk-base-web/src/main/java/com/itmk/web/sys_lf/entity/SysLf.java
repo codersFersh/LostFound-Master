@@ -27,8 +27,10 @@ public class SysLf {
     private String isLost;
     private String isFound;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date Est;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date mTime;
+    private Date lfTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date est;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date mtime;
 
 }

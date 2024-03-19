@@ -9,10 +9,8 @@ export type LostPram = {
   lfContent:string,
   lfUsername:string,
   lfPhone:string,
-  isPass:string,
-  ispassCause:string,
   isLost:string,
-  Est:string,
+  lfTime:string,
 }
 
 //列表参数类型
@@ -22,4 +20,9 @@ export type LostList = {
   currentPage:number;
   pageSize:number;
   total:number;
+}
+export type LostStatus = {
+  lfId:string,
+  isPass:string,
+  ispassCause:string,
 }
