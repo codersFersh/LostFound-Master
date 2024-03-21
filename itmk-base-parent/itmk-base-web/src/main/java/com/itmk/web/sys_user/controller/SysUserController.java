@@ -44,17 +44,16 @@ public class SysUserController {
     @PutMapping("/edit")
     @PreAuthorize("hasAuthority('sys:user:edit')")
     public ResultVo edit(@RequestBody SysUser sysUser){
-//        sysUser.setUpdateTime(new Date());
-//        sysUserService.editUser(sysUser);
-//        return ResultUtils.success("编辑成功!");
+        sysUser.setUpdateTime(new Date());
+        sysUserService.editUser1(sysUser);
+        return ResultUtils.success("编辑成功!");
 
-        sysUser.setCreateTime(new Date());
-        SysUser existingUser = sysUserService.findByUsername(sysUser.getUsername());
-        if(existingUser == null){
-            sysUserService.editUser1(sysUser);
-            return ResultUtils.success("编辑成功!");
-        }
-        return ResultUtils.error("编辑失败，已存在同名账号!");
+//        SysUser existingUser = sysUserService.findByUsername(sysUser.getUsername());
+//        if(existingUser == null){
+//            sysUserService.editUser1(sysUser);
+//            return ResultUtils.success("编辑成功!");
+//        }
+//        return ResultUtils.error("编辑失败，已存在同名账号!");
     }
 
     //删除

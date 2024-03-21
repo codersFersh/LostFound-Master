@@ -11,6 +11,7 @@ import com.itmk.web.sys_lf.entity.SysLf;
 import com.itmk.web.sys_lf.service.SysLfService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -79,7 +80,7 @@ public class LostController {
         //审核通过才显示
         query.lambda().like(SysLf::getIsPass, "2");
         //显示未寻回的数据
-        query.lambda().like(SysLf::getIsLost,"0");
+        query.lambda().ne(SysLf::getIsLost,"2");
         query.lambda().orderByDesc(SysLf::getLfTime);
         IPage<SysLf> list = sysLfService.page(page, query);
         return ResultUtils.success("查询成功", list);
@@ -98,7 +99,7 @@ public class LostController {
 
     //管理员编辑：管理审核状态
     @PostMapping("/admin/status")
-//    @PreAuthorize("hasAuthority('sys:adminlost:edit')")
+    @PreAuthorize("hasAuthority('sys:adminlost:status')")
     public ResultVo edit2(@RequestBody SysLf sysLf){
         if (sysLfService.updateById(sysLf)){
             return ResultUtils.success("审核成功！");
@@ -109,7 +110,7 @@ public class LostController {
 
     //删除
     @DeleteMapping("/admin/{lfId}")
-//    @PreAuthorize("hasAuthority('sys:adminlost:delete')")
+    @PreAuthorize("hasAuthority('sys:adminlost:delete')")
     public ResultVo delete2(@PathVariable("lfId") Long lfId) {
         if (sysLfService.removeById(lfId)) {
             return ResultUtils.success("删除成功！");
@@ -142,6 +143,12 @@ public class LostController {
         query.lambda().orderByDesc(SysLf::getLfTime);
         IPage<SysLf> list = sysLfService.page(page, query);
         return ResultUtils.success("查询成功", list);
+    }
+
+    @GetMapping("/sum")
+    public ResultVo sum (){
+      int i =   sysLfService.countByIsPass();
+      return ResultUtils.success("获取成功",i);
     }
 
 

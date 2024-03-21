@@ -10,6 +10,7 @@ public class MyPostsParm {
     private Long pageSize;
 
     private String userId;
+    private String isIlk;
     private String lfName;
     private String isPass;
     private String isFound;

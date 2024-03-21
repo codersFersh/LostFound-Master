@@ -8,6 +8,7 @@ export const userSotre = defineStore('userSotre', {
             nickName:'',
             sex:'',
             token:'',
+            roleId:'',
             codeList: []
         }
     },
@@ -23,6 +24,9 @@ export const userSotre = defineStore('userSotre', {
         },
         getToken(state) {
             return state.token
+        },
+        getRoleId(state) {
+            return state.roleId
         },
         getCodeList(state){
             return state.codeList
@@ -41,6 +45,9 @@ export const userSotre = defineStore('userSotre', {
         setToken(token: string) {
             this.token = token;
         },
+        setRoleId(roleId: string) {
+            this.roleId = roleId;
+        },
         getInfo() {
             return new Promise((resolve, reject) => {
                 getInfoApi(this.userId).then((res) => {
@@ -57,7 +64,7 @@ export const userSotre = defineStore('userSotre', {
     persist: {
       enabled: true,  //开启持久化操作
       strategies: [
-        { storage: sessionStorage, paths: ['userId','nickName','sex','token'] }
+        { storage: sessionStorage, paths: ['userId','nickName','sex','token','roleId'] }
       ]
     }
 })

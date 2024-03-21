@@ -11,7 +11,7 @@ export type FoundPram = {
   lfPhone:string,
   isPass:string,
   ispassCause:string,
-  isLost:string,
+  isFound:string,
   lfTime:string,
 }
 

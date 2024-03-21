@@ -61,7 +61,8 @@ public class SysRoleController {
     @DeleteMapping("/{roleId}")
     @PreAuthorize("hasAuthority('sys:role:delete')")
     public ResultVo delete(@PathVariable("roleId") Long roleId) {
-        if(sysUserRoleService.getById(roleId) != null){
+        int a = sysUserRoleService.selectById(roleId);
+        if(a ==0){
             if (sysRoleService.removeById(roleId)) {
                 return ResultUtils.success("删除成功！");
             }

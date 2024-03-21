@@ -58,12 +58,13 @@ import useDialog from "@/hooks/useDialog";
 import { ElMessage, FormInstance } from "element-plus";
 import { reactive, ref,computed } from "vue";
 import { updatePasswordApi ,loginOutApi} from "@/api/user/index";
-// import { useRouter } from "vue-router";
 import { userSotre } from "@/store/user";
 import useInstance from "@/hooks/useInstance";
+import { tabStore } from "@/store/tabs";
 const {global} = useInstance();
 const store = userSotre();
-// const router = useRouter();
+
+const tabs = tabStore()
 
 const getSex = computed(() => store.getSex);
 
@@ -126,7 +127,7 @@ const commit = () => {
     if(res1){
       ElMessage.success(res.msg);
         //清空数据
-    sessionStorage.clear()
+    sessionStorage.clear();
     //跳转登录
     window.location.href = '/login';
     // router.push({path: "/login"});
@@ -144,8 +145,11 @@ const loginoutBtn = async() =>{
   if(confirm){
     let res = await loginOutApi()
     if(res){
+    //清除tab的数据，防止因为持久化而保存管理员的访问导航
+    tabs.tabList = []
         //清空数据
     sessionStorage.clear()
+    // closeAll()
     //跳转登录
     window.location.href = '/login';
     // router.push({path: "/login"});

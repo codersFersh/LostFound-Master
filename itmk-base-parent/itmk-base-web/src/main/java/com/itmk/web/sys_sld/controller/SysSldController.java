@@ -10,6 +10,7 @@ import com.itmk.web.sys_sld.entity.SysSld;
 import com.itmk.web.sys_sld.service.SysSldService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/sld")
@@ -20,7 +21,7 @@ public class SysSldController {
     private SysSldService sysSldService;
 
     @PostMapping("/add")
-//    @PreAuthorize("hasAuthority('sys:sld:add')")
+    @PreAuthorize("hasAuthority('sys:sld:add')")
     public ResultVo add(@RequestBody SysSld sysSld){
 
         // 查询当前启用状态为1的数据数量
@@ -36,7 +37,7 @@ public class SysSldController {
     }
 
     @PostMapping("/edit")
-//    @PreAuthorize("hasAuthority('sys:sld:edit')")
+        @PreAuthorize("hasAuthority('sys:sld:edit')")
     public ResultVo enit(@RequestBody SysSld sysSld) {
         // 查询当前启用状态为1的数据数量
         int count = sysSldService.count(new QueryWrapper<SysSld>().eq("is_enable", "1"));
@@ -51,7 +52,7 @@ public class SysSldController {
     }
 
     @DeleteMapping("/{sldId}")
-//    @PreAuthorize("hasAuthority('sys:sld:delete')")
+    @PreAuthorize("hasAuthority('sys:sld:delete')")
     public ResultVo delete(@PathVariable("sldId") Long sldId){
         if(sysSldService.removeById(sldId)){
             return ResultUtils.success("删除成功！");

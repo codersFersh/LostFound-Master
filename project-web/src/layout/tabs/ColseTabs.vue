@@ -65,7 +65,7 @@ const closeLeft = ()=>{
 }
 //关闭所有
 const closeAll = ()=>{
-  store.tabList.splice(0,store.tabList.length)
+  store.tabList.splice(1,store.tabList.length)
   //跳转首页
   router.push({path:'/dashboard'})
 }

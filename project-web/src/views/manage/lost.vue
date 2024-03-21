@@ -19,8 +19,9 @@
       </el-form-item>
       <el-form-item>
         <el-select v-model="searchParm.isLost" style="width: 150px" placeholder="请选择失物状态">
-                    <el-option label="未寻回" value="0"></el-option>
-                    <el-option label="已寻回" value="1"></el-option>
+                    <el-option label="未找回" value="0"></el-option>
+                    <el-option label="找回确认中" value="0"></el-option>
+                    <el-option label="已找回" value="2"></el-option>
                 </el-select>
       </el-form-item>
       <el-form-item>
@@ -58,19 +59,22 @@
       <el-table-column prop="isLost" label="失物状态" width="100">
         <template #default="scope">
           <el-tag v-if="scope.row.isLost == '0'" type="danger" size="default" effect="Light">
-            未寻回
+            未找回
           </el-tag>
           <el-tag v-if="scope.row.isLost == '1'" type="danger" size="default" effect="Light">
-            已寻回
+            找回确认中
+          </el-tag>
+          <el-tag v-if="scope.row.isLost == '2'" type="danger" size="default" effect="Light">
+            已找回
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="ispassCause" label="审核备注" width="100"></el-table-column>
       <el-table-column prop="est" label="发布时间" width="200"></el-table-column>
-      <el-table-column label="操作" width="200" align="center" fixed="right">
+      <el-table-column v-if="global.$hasPerm(['sys:adminlost:status','sys:adminlost:delete'])" label="操作" width="220" align="center" fixed="right">
         <template #default="scope">
-          <el-button type="primary" icon="Edit" size="default"  @click="editBtn(scope.row)">审核</el-button>
-          <el-button type="danger" icon="Delete" size="default" @click="deleteBtn(scope.row.lfId)">删除</el-button>
+          <el-button  v-if="global.$hasPerm(['sys:adminlost:status'])" type="primary" icon="Edit" size="default"  @click="editBtn(scope.row)">审核</el-button>
+          <el-button  v-if="global.$hasPerm(['sys:adminlost:delete'])" type="danger" icon="Delete" size="default" @click="deleteBtn(scope.row.lfId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

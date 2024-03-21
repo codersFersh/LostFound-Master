@@ -3,7 +3,7 @@
     <!-- 搜索 -->
     <el-form :model="searchParm" :inline="true" size="default">
       <el-form-item>
-        <el-input placeholder="请输入失物名称" v-model="searchParm.lfName"></el-input>
+        <el-input placeholder="请输入物品名称" v-model="searchParm.lfName"></el-input>
       </el-form-item>
       <el-form-item>
         <el-select v-model="searchParm.isIlk" style="width: 150px" placeholder="请选择事件">
@@ -55,7 +55,7 @@
       <el-table-column label="操作" width="320" align="center">
         <template #default="scope">
           <el-button type="primary" icon="Edit" size="default" @click="editBtn(scope.row)">编辑</el-button>
-          <!-- <el-button type="danger" icon="Delete" size="default" @click="deleteBtn(scope.row.infoId)">删除</el-button> -->
+          <el-button type="danger" icon="Delete" size="default" @click="deleteBtn(scope.row.infoId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -71,13 +71,17 @@
       @on-close="onClose" @on-confirm="commit">
       <template v-slot:content>
         <el-form :model="addModel" ref="addForm" :rules="rules" label-width="120px" :inline="false" size="default">
-          <el-row gutter="20">
-            <el-col :span="12" :offset="0">
-              <el-form-item prop="isTrue" label="是否同意：">
-                <el-radio-group v-model="addModel.isTrue">
-                  <el-radio :label="'1'">不同意</el-radio>
-                  <el-radio :label="'2'">同意</el-radio>
-                </el-radio-group>
+          <el-row>
+            <el-col>
+              <el-form-item prop="infoPhone" label="联系方式：">
+                <el-input v-model="addModel.infoPhone"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col >
+              <el-form-item prop="infoContent" label="领取注明：">
+                <el-input v-model="addModel.infoContent" type="textarea"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -93,9 +97,13 @@ import SysDialog from '@/components/SysDialog.vue';
 import useDialog from "@/hooks/useDialog";
 import { reactive, ref, onMounted, nextTick } from 'vue';
 import { ElMessage, FormInstance } from "element-plus";
-import { InfoParm } from "@/api/info/infoModel";
-import { infoEdit, infoList } from "@/api/info";
+import { EditMyInfoPram } from "@/api/info/infoModel";
+import { MyInfoEdit, myinfo,myinfoDel } from "@/api/info";
 import { userSotre } from "@/store/user";
+import useInstance from '@/hooks/useInstance'
+
+//获取全局golbal
+const { global } = useInstance()
 
 const user = userSotre()
 
@@ -112,7 +120,7 @@ const addForm = ref<FormInstance>();
 const searchParm = reactive({
   lfName: "",
   isIlk:"",
-  lfUserid:"",
+  UserId:"",
   currentPage: 1,
   pageSize: 10,
   total: 0,
@@ -122,8 +130,8 @@ const searchParm = reactive({
 const tableList = ref([]);
 //获取表格的数据
 const getList = async () => {
-  searchParm.lfUserid = user.getUserId;
-  let res = await infoList(searchParm);
+  searchParm.UserId = user.getUserId;
+  let res = await myinfo(searchParm);
   if (res && res.code == 200) {
     tableList.value = res.data.records;
     searchParm.total = res.data.total;
@@ -156,16 +164,24 @@ const resetBtn = () => {
 
 //新增绑定对象
 const addModel = reactive({
-  isTrue: "",
+  infoPhone:"",
+  infoContent:"",
 })
 
 //表单验证规则
 const rules = reactive({
-  isTrue: [
+  infoPhone: [
     {
       required: true,
       trigger: ["blur", "change"],
-      message: "是否同意",
+      message: "请输入联系方式",
+    },
+  ],
+  infoContent: [
+    {
+      required: true,
+      trigger: ["blur", "change"],
+      message: "请提供证明",
     },
   ],
 });
@@ -173,7 +189,7 @@ const rules = reactive({
 
 
 //编辑按钮
-const editBtn = (row: InfoParm) => {
+const editBtn = (row: EditMyInfoPram) => {
   console.log(row);
   //显示弹框
   dialog.visible = true;
@@ -192,7 +208,7 @@ const commit = () => {
   // 验证表单
   addForm.value?.validate(async (valid) => {
     if (valid) {
-      let res = await infoEdit(addModel);
+      let res = await MyInfoEdit(addModel);
       if (res && res.code == 200) {
         ElMessage.success(res.msg);
         getList();
@@ -203,19 +219,19 @@ const commit = () => {
 }
 
 
-// //删除按钮
-// const deleteBtn = async (infoId: string) => {
-//   const confirm = await global.$myconfirm('确定删除该数据吗？')
-//   console.log(confirm)
-//   if (confirm) {
-//     let res = await SldDel(infoId)
-//     if (res && res.code == 200) {
-//       ElMessage.success(res.msg)
-//       //刷新列表
-//       getList()
-//     }
-//   }
-// };
+//删除按钮
+const deleteBtn = async (infoId: string) => {
+  const confirm = await global.$myconfirm('确定删除该数据吗？')
+  console.log(confirm)
+  if (confirm) {
+    let res = await myinfoDel(infoId)
+    if (res && res.code == 200) {
+      ElMessage.success(res.msg)
+      //刷新列表
+      getList()
+    }
+  }
+};
 
 
 

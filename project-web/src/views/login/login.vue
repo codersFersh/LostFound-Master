@@ -275,6 +275,7 @@ const commit = () => {
         store.setNickName(res.data.nickName)
         store.setSex(res.data.sex)
         store.setToken(res.data.token)
+        store.setRoleId(res.data.roleId)
         //跳转首页
         router.push({ path: '/' })
       }

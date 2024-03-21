@@ -8,14 +8,14 @@
       <el-form-item>
         <el-button icon="Search" @click="searchBtn">搜索</el-button>
         <el-button icon="Close" type="danger" @click="resetBtn">重置</el-button>
-        <!-- v-if="global.$hasPerm(['sys:user:add'])" -->
-        <el-button icon="Plus" type="primary" @click="addBtn">新增</el-button>
+        
+        <el-button v-if="global.$hasPerm(['sys:sld:add'])" icon="Plus" type="primary" @click="addBtn">新增</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格 -->
     <el-table :data="tableList" :height="TableHeight">
       <el-table-column prop="sldName" label="轮播图名称"></el-table-column>
-      <el-table-column prop="sldType" label="存储路径"></el-table-column>
+      <el-table-column prop="sldType" label="轮播图备注"></el-table-column>
       <el-table-column label="图片">
         <template #default="{ row }">
           <el-image :src="row.sldImg" style="width: 100px; height: 100px;" />
@@ -31,10 +31,10 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="320" align="center">
+      <el-table-column v-if="global.$hasPerm(['sys:sld:edit','sys:sld:delete'])" label="操作" width="220" align="center" fixed="right">
         <template #default="scope">
-          <el-button type="primary" icon="Edit" size="default" @click="editBtn(scope.row)">编辑</el-button>
-          <el-button type="danger" icon="Delete" size="default" @click="deleteBtn(scope.row.sldId)">删除</el-button>
+          <el-button  v-if="global.$hasPerm(['sys:sld:edit'])" type="primary" icon="Edit" size="default"  @click="editBtn(scope.row)">审核</el-button>
+          <el-button  v-if="global.$hasPerm(['sys:sld:delete'])" type="danger" icon="Delete" size="default" @click="deleteBtn(scope.row.lfId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

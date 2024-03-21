@@ -6,6 +6,12 @@
         <el-input placeholder="请输入物品名称" v-model="searchParm.lfName"></el-input>
       </el-form-item>
       <el-form-item>
+        <el-select v-model="searchParm.isIlk" style="width: 150px" placeholder="请选择事件">
+                    <el-option label="招领发布" value="0"></el-option>
+                    <el-option label="失物发布" value="1"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
         <el-select v-model="searchParm.isPass" style="width: 150px" placeholder="请选择审核状态">
                     <el-option label="待审核" value="0"></el-option>
                     <el-option label="不通过" value="1"></el-option>
@@ -14,15 +20,17 @@
       </el-form-item>
       <el-form-item>
         <el-select v-model="searchParm.isLost" style="width: 150px" placeholder="请选择失物状态">
-                    <el-option label="未寻回" value="0"></el-option>
-                    <el-option label="已寻回" value="1"></el-option>
-                </el-select>
+                    <el-option label="未找回" value="0"></el-option>
+                    <el-option label="找回确认中" value="1"></el-option>
+                    <el-option label="已找回" value="2"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-select v-model="searchParm.isFound" style="width: 150px" placeholder="请选择招领状态">
                     <el-option label="待领回" value="0"></el-option>
-                    <el-option label="已领回" value="1"></el-option>
-                </el-select>
+                    <el-option label="领回确认中" value="1"></el-option>
+                    <el-option label="已领回" value="2"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button icon="Search" @click="searchBtn">搜索</el-button>
@@ -35,10 +43,10 @@
       <el-table-column prop="isIlk" label="事件"  width="100">
         <template #default="scope">
           <el-tag v-if="scope.row.isIlk == '0'" type="danger" size="default" effect="Light">
-            失物发布
+            招领发布
           </el-tag>
           <el-tag v-if="scope.row.isIlk == '1'" type="info" size="default" effect="Light">
-            招领发布
+            失物发布
           </el-tag>
         </template>
       </el-table-column>
@@ -63,14 +71,17 @@
           </el-tag>
         </template>
       </el-table-column>
-      
+      <el-table-column prop="ispassCause" label="审核结果" width="120"></el-table-column>
       <el-table-column prop="isLost" label="失物状态"  width="100">
         <template #default="scope">
           <el-tag v-if="scope.row.isLost == '0'" type="danger" size="default" effect="Light">
-            未寻回
+            未找回
           </el-tag>
           <el-tag v-if="scope.row.isLost == '1'" type="danger" size="default" effect="Light">
-            已寻回
+            找回确认中
+          </el-tag>
+          <el-tag v-if="scope.row.isLost == '2'" type="danger" size="default" effect="Light">
+            已找回
           </el-tag>
         </template>
       </el-table-column>
@@ -80,6 +91,9 @@
             待领回
           </el-tag>
           <el-tag v-if="scope.row.isFound == '1'" type="warning" size="default" effect="Light">
+            领回确认中
+          </el-tag>
+          <el-tag v-if="scope.row.isFound == '2'" type="warning" size="default" effect="Light">
             已领回
           </el-tag>
         </template>
@@ -89,7 +103,7 @@
       <el-table-column prop="mtime" label="修改时间"  width="200"></el-table-column>
       <el-table-column label="操作" width="220" align="center" fixed="right">
         <template #default="scope">
-          <el-button type="primary" icon="Edit" size="default"  @click="editBtn(scope.row)">编辑</el-button>
+          <el-button :disabled="isDisableEdit(scope.row)" type="primary" icon="Edit" size="default" @click="editBtn(scope.row)">编辑</el-button>
           <el-button type="danger" icon="Delete" size="default" @click="deleteBtn(scope.row.lfId)">删除</el-button>
         </template>
       </el-table-column>
@@ -181,7 +195,7 @@
 <script setup lang="ts">
 import SysDialog from '@/components/SysDialog.vue';
 import useDialog from "@/hooks/useDialog";
-import { reactive, ref, onMounted, nextTick } from 'vue';
+import { reactive, ref, onMounted, nextTick,computed } from 'vue';
 import { ElMessage, FormInstance,UploadProps } from "element-plus";
 import useInstance from '@/hooks/useInstance'
 import { MyDel, MyEdit, MyList } from "@/api/my";
@@ -286,6 +300,7 @@ const rules = reactive({
 // 搜索框绑定的对象
 const searchParm = reactive({
   userId:"",
+  isIlk:"",
   lfName: "",
   isPass:"",
   isFound:"",
@@ -314,7 +329,10 @@ const sizeChange = (size: number) => {
 };
 
 
-
+// 控制编辑按钮禁用状态的方法
+const isDisableEdit = (row:any) => {
+  return row.isLost === '2' || row.isFound === '2';
+};
 
 //搜索按钮点击事件
 const searchBtn = () => {

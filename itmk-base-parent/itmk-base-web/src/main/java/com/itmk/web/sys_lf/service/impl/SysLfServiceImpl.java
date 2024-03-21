@@ -8,4 +8,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SysLfServiceImpl extends ServiceImpl<SysLfMapper, SysLf> implements SysLfService {
+
+    @Override
+    public Integer countByIsPass() {
+        return baseMapper.countByIsPass();
+    }
 }

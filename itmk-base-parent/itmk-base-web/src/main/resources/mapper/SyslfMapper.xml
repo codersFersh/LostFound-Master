@@ -3,5 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.itmk.web.sys_lf.mapper.SysLfMapper">
-
+    <select id="countByIsPass" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(*) FROM sys_lf WHERE is_pass = 0
+    </select>
 </mapper>

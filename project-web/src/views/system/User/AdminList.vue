@@ -144,11 +144,11 @@
                 ></SelectChecked>
               </el-form-item>
             </el-col>
-            <el-col :span="12" :offset="0">
+            <!-- <el-col :span="12" :offset="0">
               <el-form-item prop="username" label="账户：">
                 <el-input v-model="addModel.username"></el-input>
               </el-form-item>
-            </el-col>
+            </el-col> -->
           </el-row>
           <el-row v-if="tags == '0'">
             <el-col :span="12" :offset="0">

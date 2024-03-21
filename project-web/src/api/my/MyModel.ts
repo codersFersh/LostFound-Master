@@ -21,6 +21,7 @@ export type MyPram = {
 //列表参数类型
 export type mylist = {
   userId:string;
+  isIlk:string;
   lfName:string;
   isPass:string;
   isFound:string;

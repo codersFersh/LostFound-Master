@@ -41,3 +41,7 @@ export const LostAdminStatus = (parm:LostStatus)=>{
 export const isPassLostList = (parm:LostList)=>{
   return http.get("/lost/isPassList",parm)
 }
+//审核列表
+export const sum = ()=>{
+  return http.get("/lost/sum")
+}

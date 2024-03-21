@@ -5,4 +5,5 @@ import com.itmk.web.sys_lf.entity.SysLf;
 
 
 public interface SysLfService extends IService<SysLf> {
+    Integer countByIsPass();
 }

@@ -20,7 +20,8 @@
       <el-form-item>
         <el-select v-model="searchParm.isFound" style="width: 150px" placeholder="请选择状态">
                     <el-option label="未领回" value="0"></el-option>
-                    <el-option label="已领回" value="1"></el-option>
+                    <el-option label="领回确认中" value="1"></el-option>
+                    <el-option label="已领回" value="2"></el-option>
                 </el-select>
       </el-form-item>
       <el-form-item>
@@ -61,16 +62,19 @@
             待领回
           </el-tag>
           <el-tag v-if="scope.row.isFound == '1'" type="danger" size="default" effect="Light">
+            领回确认中
+          </el-tag>
+          <el-tag v-if="scope.row.isFound == '2'" type="danger" size="default" effect="Light">
             已领回
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="ispassCause" label="审核备注"  width="120"></el-table-column>
       <el-table-column prop="est" label="发布时间"  width="200"></el-table-column>
-      <el-table-column label="操作" width="220" align="center" fixed="right">
+      <el-table-column v-if="global.$hasPerm(['sys:adminfound:status','sys:adminfound:delete'])" label="操作" width="220" align="center" fixed="right">
         <template #default="scope">
-          <el-button type="primary" icon="Edit" size="default"  @click="editBtn(scope.row)">审核</el-button>
-          <el-button type="danger" icon="Delete" size="default" @click="deleteBtn(scope.row.lfId)">删除</el-button>
+          <el-button  v-if="global.$hasPerm(['sys:adminfound:status'])" type="primary" icon="Edit" size="default"  @click="editBtn(scope.row)">审核</el-button>
+          <el-button  v-if="global.$hasPerm(['sys:adminfound:delete'])" type="danger" icon="Delete" size="default" @click="deleteBtn(scope.row.lfId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

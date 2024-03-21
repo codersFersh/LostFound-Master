@@ -8,4 +8,5 @@ public class LoginVo {
     private String nickName;
     private String sex;
     private String token;
+    private Long roleId;
 }

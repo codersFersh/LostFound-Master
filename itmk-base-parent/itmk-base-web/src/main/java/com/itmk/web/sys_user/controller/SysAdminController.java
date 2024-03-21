@@ -79,18 +79,17 @@ public class SysAdminController {
     @PutMapping("/edit")
     @PreAuthorize("hasAuthority('sys:admin:edit')")
     public ResultVo edit(@RequestBody SysUser sysUser){
-//        sysUser.setUpdateTime(new Date());
-//        sysUserService.editUser(sysUser);
-//        return ResultUtils.success("编辑成功!");
+        sysUser.setUpdateTime(new Date());
+        sysUserService.editUser(sysUser);
+        return ResultUtils.success("编辑成功!");
 
-        sysUser.setCreateTime(new Date());
-        // 检查是否存在同名账号
-        SysUser existingUser = sysUserService.findByUsername(sysUser.getUsername());
-        if(existingUser == null){
-            sysUserService.editUser(sysUser);
-            return ResultUtils.success("编辑成功!");
-        }
-        return ResultUtils.error("编辑失败，已存在同名账号!");
+//        // 检查是否存在同名账号
+//        SysUser existingUser = sysUserService.findByUsername(sysUser.getUsername());
+//        if(existingUser == null){
+//            sysUserService.editUser(sysUser);
+//            return ResultUtils.success("编辑成功!");
+//        }
+//        return ResultUtils.error("编辑失败，已存在同名账号!");
 
     }
 
@@ -232,6 +231,11 @@ public class SysAdminController {
         //获取用户信息
         SysUser user = (SysUser)authenticate.getPrincipal();
 
+        // 查询用户角色信息
+        SysUserRole sysUserRole = sysUserRoleService.getByUserId(user.getUserId());
+
+        Long roleId = sysUserRole.getRoleId(); // 获取角色ID
+
         //查询用户信息
 //        QueryWrapper<SysUser> query = new QueryWrapper<>();
 //        query.lambda().eq(SysUser::getUsername,parm.getUsername())
@@ -245,6 +249,8 @@ public class SysAdminController {
         vo.setUserId(user.getUserId());
         vo.setNickName(user.getNickName());
         vo.setSex(user.getSex());
+        vo.setRoleId(roleId);
+
 
         //生成token
         Map<String,String> map = new HashMap<>();
@@ -252,6 +258,7 @@ public class SysAdminController {
         map.put("username",user.getUsername());
         String token = jwtUtils.generateToken(map);
         vo.setToken(token);
+        System.out.println(vo+"============");
         return ResultUtils.success("登录成功",vo);
     }
 
